@@ -1,5 +1,7 @@
 using NUnit.Framework;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace StringEvaluator.UnitTests
 {
@@ -63,6 +65,24 @@ namespace StringEvaluator.UnitTests
 
             // Assert
             Assert.AreEqual(expression, standarizedExpression);
+        }
+
+        [TestCase("1+1", new string[] { "1", "+", "1" })]
+        [TestCase("21-1", new string[] { "21", "-", "1" })]
+        [TestCase("1200-0/3", new string[] { "1200", "-", "0", "/", "3" })]
+        [TestCase("1200-0/3*10", new string[] { "1200", "-", "0", "/", "3", "*", "10" })]
+        [TestCase("0+1200-0/3*10", new string[] { "0", "+", "1200", "-", "0", "/", "3", "*", "10" })]
+        public void get_list_of_factors(string expression, string[] exprectedListOfFactors)
+        {
+            // Arrange
+            BasicEvaluator stringEvaluator = new BasicEvaluator();
+
+            // Act
+            ICollection<string> expressionFactors = stringEvaluator.SplitExpressionIntoFactors(expression);
+
+            // Assert
+            Assert.AreEqual(exprectedListOfFactors.Length, expressionFactors.Count);
+            Assert.AreEqual(exprectedListOfFactors.ToList(), expressionFactors.ToList());
         }
     }
 }

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace StringEvaluator
@@ -8,7 +10,7 @@ namespace StringEvaluator
         public decimal Evaluate(string expression)
         {
             ValidateAndStandarize(ref expression);
-
+            ICollection<string> factors = SplitExpressionIntoFactors(expression);
             return 0;
         }
         
@@ -26,6 +28,12 @@ namespace StringEvaluator
             {
                 throw new ArgumentException("Expression is not valid");
             }
+        }
+
+        public ICollection<string> SplitExpressionIntoFactors(string expression)
+        {
+            Regex regex = new Regex(@"(\d+|[-+\/*]){1}");
+            return regex.Matches(expression).Select(match => match.Value).ToList();
         }
     }
 }
