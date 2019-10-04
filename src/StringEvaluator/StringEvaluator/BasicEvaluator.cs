@@ -62,11 +62,11 @@ namespace StringEvaluator
             switch (operation)
             {
                 case "+":
-                    return firstNumber + secondNumber;
+                    return checked(firstNumber + secondNumber);
                 case "-":
-                    return firstNumber - secondNumber;
+                    return checked(firstNumber - secondNumber);
                 case "*":
-                    return firstNumber * secondNumber;
+                    return checked(firstNumber * secondNumber);
                 case "/":
                     return firstNumber / secondNumber;
                 default:

@@ -14,7 +14,7 @@ namespace StringEvaluator.UnitTests
             BasicEvaluator stringEvaluator = new BasicEvaluator();
 
             // Act
-            void evaluateDelegate() => stringEvaluator.Evaluate(null);
+            void evaluateDelegate() => stringEvaluator.Evaluate(null as string);
 
             // Assert
             Exception ex = Assert.Throws<ArgumentException>(() => evaluateDelegate());
@@ -89,6 +89,7 @@ namespace StringEvaluator.UnitTests
         [TestCase("1-1", 1 - 1)]
         [TestCase("1*1", 1 * 1)]
         [TestCase("1/1", 1 / 1)]
+        [TestCase("1-91", 1 - 91)]
         [TestCase("1+2*3-4/3", 1.0 + (2.0 * 3.0) - (4.0 / 3.0))]
         public void get_result_from_string_expression(string expression, decimal expectedResult)
         {
@@ -116,6 +117,19 @@ namespace StringEvaluator.UnitTests
 
             // Assert
             Exception ex = Assert.Throws<DivideByZeroException>(() => evaluateDelegate());
+        }
+
+        [TestCase("79228162514264337593543950335+10")]
+          public void throws_error_when_number_is_too_big(string expression)
+        {
+            // Arrange
+            BasicEvaluator stringEvaluator = new BasicEvaluator();
+
+            // Act
+            void evaluateDelegate() => stringEvaluator.Evaluate(expression);
+
+            // Assert
+            Exception ex = Assert.Throws<OverflowException>(() => evaluateDelegate());
         }
     }
 }
