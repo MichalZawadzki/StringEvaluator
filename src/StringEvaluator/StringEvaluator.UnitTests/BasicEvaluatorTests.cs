@@ -78,11 +78,44 @@ namespace StringEvaluator.UnitTests
             BasicEvaluator stringEvaluator = new BasicEvaluator();
 
             // Act
-            ICollection<string> expressionFactors = stringEvaluator.SplitExpressionIntoFactors(expression);
+            ICollection<string> expressionFactors = stringEvaluator.GetSplitExpression(expression);
 
             // Assert
             Assert.AreEqual(exprectedListOfFactors.Length, expressionFactors.Count);
             Assert.AreEqual(exprectedListOfFactors.ToList(), expressionFactors.ToList());
+        }
+
+        [TestCase("1+1", 1 + 1)]
+        [TestCase("1-1", 1 - 1)]
+        [TestCase("1*1", 1 * 1)]
+        [TestCase("1/1", 1 / 1)]
+        [TestCase("1+2*3-4/3", 1.0 + (2.0 * 3.0) - (4.0 / 3.0))]
+        public void get_result_from_string_expression(string expression, decimal expectedResult)
+        {
+            // Arrange
+            BasicEvaluator stringEvaluator = new BasicEvaluator();
+
+            // Act
+            decimal result = stringEvaluator.Evaluate(expression);
+
+            // Assert
+            Assert.That(expectedResult, Is.EqualTo(result).Within(0.00000001));
+        }
+
+        [TestCase("0/0")]
+        [TestCase("1/0")]
+        [TestCase("2+4-8/0")]
+        [TestCase("1+3/0*7")]
+        public void throws_error_when_dividing_by_zero(string expression)
+        {
+            // Arrange
+            BasicEvaluator stringEvaluator = new BasicEvaluator();
+
+            // Act
+            void evaluateDelegate() => stringEvaluator.Evaluate(expression);
+
+            // Assert
+            Exception ex = Assert.Throws<DivideByZeroException>(() => evaluateDelegate());
         }
     }
 }
